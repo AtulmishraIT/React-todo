@@ -72,7 +72,7 @@ function App() {
   return (
     <div className="body bg-purple-100 h-[100vh] w-auto">
       <Navbar />
-      <div className="mx-3 md:container my-3 md:mx-auto bg-purple-200 px-6 py-2 max-h-[80vh] md:w-1/2 align-middle rounded-lg">
+      <div className="mx-3 md:container my-3 md:mx-auto bg-purple-200 px-6 py-2 max-h-auto md:w-1/2 align-middle rounded-lg">
       <h2 className="head font-bold text-2xl text-center py-3">iTodo!! Add your Daily Todos here</h2>
         <h2 className="text text-xl text-black py-2 font-bold">Add Todos</h2>
         <div className="todo font-bold ">
