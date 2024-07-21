@@ -15,16 +15,16 @@ function App() {
   useEffect(() => {
     let todosString = localStorage.getItem("todos");
     if (todosString) {
-      let todos = JSON.parse(localStorage.getItem("todos"));
+      let todos = JSON.parse(todosString);
       setTodos(todos);
     }
   }, []);
 
-  const saveToLS = (params) => {
-    localStorage.setItem("todos", JSON.stringify(todos));
+  const saveToLS = (newTodos) => {
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   };
 
-  const handlechange = (e) => {
+  const handleChange = (e) => {
     setTodo(e.target.value);
   };
 
@@ -35,7 +35,7 @@ function App() {
       return item.id !== id;
     });
     setTodos(newTodos);
-    saveToLS();
+    saveToLS(newTodos);
   };
 
   const handleDel = (e, id) => {
@@ -43,22 +43,21 @@ function App() {
       return item.id !== id;
     });
     setTodos(newTodos);
-    saveToLS();
+    saveToLS(newTodos);
   };
 
   const handleAdd = () => {
-    if (todo) {
-      setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
-      setTodo("");
-    } else alert("Enter some todos to add");
-    saveToLS();
+    const newTodos = [...todos, { id: uuidv4(), todo, isCompleted: false }];
+    setTodos(newTodos);
+    setTodo("");
+    saveToLS(newTodos);
   };
 
   const toggleFinished = (e) => {
     setshowFinished(!showFinished);
   };
 
-  const handlecheckbox = (e) => {
+  const handleCheckbox = (e) => {
     let id = e.target.name;
     let index = todos.findIndex((item) => {
       return item.id === id;
@@ -66,26 +65,32 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos);
-    saveToLS();
+    saveToLS(newTodos);
   };
 
   return (
     <div className="body bg-purple-100 h-[100vh] w-auto">
       <Navbar />
-      <div className="mx-3 md:container my-3 md:mx-auto bg-purple-200 px-6 py-2 max-h-auto md:w-1/2 align-middle rounded-lg">
-      <h2 className="head font-bold text-2xl text-center py-3">iTodo!! Add your Daily Todos here</h2>
+      <div className="mx-3 md:container my-3 md:mx-auto bg-purple-200 px-6 py-2 max-h-[80vh] md:w-1/2 align-middle rounded-lg">
+        <h2 className="head font-bold text-2xl text-center py-3">
+          iTodo!! Add your Daily Todos here
+        </h2>
         <h2 className="text text-xl text-black py-2 font-bold">Add Todos</h2>
         <div className="todo font-bold ">
           <input
             type="text"
             className="text-lg max-h-screen w-full rounded-lg  border border-purple-300 px-3 focus:outline-none focus:border-purple-800"
             value={todo}
-            onChange={handlechange}
+            onChange={handleChange}
           />
           <button
             onClick={handleAdd}
+            disabled={todo.length < 3}
             className="btn bg-purple-500 hover:bg-purple-700 my-3 py-1 px-3 w-full rounded-lg"
-          ><label htmlFor="" className="text-white">Add </label>
+          >
+            <label htmlFor="" className="text-white">
+              Add{" "}
+            </label>
           </button>
         </div>
         <h2 className="text text-xl text-black py-2 font-bold">Your Todos</h2>
@@ -95,23 +100,16 @@ function App() {
           checked={showFinished}
           className="my-3"
         />{" "}
-        Show FInished
-        {todos.length === 0 ? (
-          <div className="mx-3 my-3">No todos to show</div>
-        ) : (
-          ""
-        )}
+        Show Finished
+        {todos.length === 0 ? <div className="mx-3 my-3">No todos to show</div> : ""}
         {todos.map((item) => {
           return (
             (showFinished || !item.isCompleted) && (
-              <div
-                key={item.id}
-                className="todos flex my-3 w-auto justify-between"
-              >
+              <div key={item.id} className="todos flex my-3 w-auto justify-between">
                 <div className="flex gap-5 ">
                   <input
                     name={item.id}
-                    onChange={handlecheckbox}
+                    onChange={handleCheckbox}
                     type="checkbox"
                     className=""
                     checked={item.isCompleted}
